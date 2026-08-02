@@ -8,19 +8,8 @@ def wetter_laden():
         "https://api.open-meteo.com/v1/forecast?"
         f"latitude={LATITUDE}"
         f"&longitude={LONGITUDE}"
-        "&current="
-        "temperature_2m,"
-        "apparent_temperature,"
-        "precipitation,"
-        "pressure_msl,"
-        "cloud_cover,"
-        "wind_speed_10m,"
-        "wind_direction_10m"
-        "&hourly="
-        "temperature_2m,"
-        "pressure_msl,"
-        "cloud_cover,"
-        "precipitation"
+        "&current=temperature_2m,apparent_temperature,precipitation,pressure_msl,cloud_cover,wind_speed_10m,wind_direction_10m"
+        "&hourly=temperature_2m,pressure_msl,cloud_cover,precipitation"
         "&forecast_days=2"
         "&timezone=Europe/Berlin"
     )
@@ -28,13 +17,16 @@ def wetter_laden():
 
     antwort = requests.get(url)
 
+    print("OPEN METEO STATUS:", antwort.status_code)
+
     daten = antwort.json()
 
+    print("OPEN METEO KEYS:", daten.keys())
 
-    # Fehler der API sichtbar machen
+
     if "current" not in daten:
         raise Exception(
-            f"Wetter API Fehler: {daten}"
+            f"Open Meteo liefert kein current: {daten}"
         )
 
 
@@ -44,16 +36,11 @@ def wetter_laden():
 
     zeit = current["time"]
 
-    datum = zeit[:10]
-    uhrzeit = zeit[11:16]
-
-
 
     return {
 
-        # aktuelle Daten
-        "datum": datum,
-        "uhrzeit": uhrzeit,
+        "datum": zeit[:10],
+        "uhrzeit": zeit[11:16],
 
         "temperature_2m": current["temperature_2m"],
         "apparent_temperature": current["apparent_temperature"],
@@ -64,17 +51,10 @@ def wetter_laden():
         "precipitation": current["precipitation"],
 
 
-
-        # Stundenprognose für wetterprognose.py
-
         "hourly_time": hourly["time"],
-
         "hourly_temperature": hourly["temperature_2m"],
-
         "hourly_pressure": hourly["pressure_msl"],
-
         "hourly_cloud": hourly["cloud_cover"],
-
         "hourly_precipitation": hourly["precipitation"]
 
     }

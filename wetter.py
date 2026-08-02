@@ -4,12 +4,11 @@ from config import LATITUDE, LONGITUDE
 from cache import holen, speichern
 
 
-
 def wetter_laden():
 
-    # -----------------------------
+    # ----------------------------------
     # Cache prüfen
-    # -----------------------------
+    # ----------------------------------
 
     gespeichert = holen("wetter")
 
@@ -17,10 +16,9 @@ def wetter_laden():
         return gespeichert
 
 
-
-    # -----------------------------
-    # Open Meteo API
-    # -----------------------------
+    # ----------------------------------
+    # Open-Meteo API
+    # ----------------------------------
 
     url = (
         "https://api.open-meteo.com/v1/forecast?"
@@ -47,16 +45,17 @@ def wetter_laden():
     )
 
 
-
-    antwort = requests.get(url, timeout=10)
+    antwort = requests.get(
+        url,
+        timeout=10
+    )
 
     daten = antwort.json()
 
 
-
-    # -----------------------------
-    # API Fehler
-    # -----------------------------
+    # ----------------------------------
+    # API Fehler abfangen
+    # ----------------------------------
 
     if "current" not in daten:
 
@@ -65,22 +64,21 @@ def wetter_laden():
         )
 
 
-
     current = daten["current"]
     hourly = daten["hourly"]
-
 
 
     zeit = current["time"]
 
 
+    # ----------------------------------
+    # Wetterdaten speichern
+    # ----------------------------------
 
     ergebnis = {
 
 
-        # -------------------------
-        # Aktuelles Wetter
-        # -------------------------
+        # aktuelle Werte
 
         "datum": zeit[:10],
 
@@ -110,9 +108,7 @@ def wetter_laden():
 
 
 
-        # -------------------------
-        # Wetterprognose
-        # -------------------------
+        # Stundenprognose
 
         "hourly_time":
             hourly["time"],
@@ -132,10 +128,9 @@ def wetter_laden():
     }
 
 
-
-    # -----------------------------
-    # speichern
-    # -----------------------------
+    # ----------------------------------
+    # Cache speichern (15 Minuten)
+    # ----------------------------------
 
     speichern(
         "wetter",

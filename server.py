@@ -10,18 +10,14 @@ app = FastAPI(
 )
 
 
-@app.get("/")
-def start():
-
-    return {
-        "status": "AngelKI läuft"
-    }
-
-
-
 @app.get("/angelki")
 def analyse():
 
-    daten = angelki()
+    try:
+        daten = angelki()
+        return daten
 
-    return daten
+    except Exception as e:
+        return {
+            "fehler": str(e)
+        }

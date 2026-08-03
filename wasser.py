@@ -1,20 +1,22 @@
 import requests
 
 
-URL = "https://geodaten-wasser.rlp-umwelt.de/api/data/gus_messwerte_messwerteaktuell?w=MESSST_NR=number:2691510700"
+URL = (
+    "https://geodaten-wasser.rlp-umwelt.de/"
+    "api/data/gus_messwerte_messwerteaktuell"
+    "?w=MESSST_NR=number:2691510700"
+)
 
 
-def finde(messung, *namen):
-    """
-    Sucht einen Wert unter mehreren möglichen Namen
-    """
-
-    for name in namen:
-
-        if name in messung:
-            return messung[name]
-
-    return None
+HEADERS = {
+    "User-Agent": (
+        "Mozilla/5.0 "
+        "(Windows NT 10.0; Win64; x64) "
+        "AppleWebKit/537.36 "
+        "Chrome/120 Safari/537.36"
+    ),
+    "Referer": "https://geodaten-wasser.rlp-umwelt.de/"
+}
 
 
 
@@ -24,6 +26,7 @@ def wasser_laden():
 
         antwort = requests.get(
             URL,
+            headers=HEADERS,
             timeout=15
         )
 
@@ -33,114 +36,131 @@ def wasser_laden():
 
 
         if not daten:
-            raise Exception("Keine Wasserdaten erhalten")
+            raise Exception(
+                "Keine Wasserdaten erhalten"
+            )
 
 
-        # API kann Liste oder Objekt liefern
-        if isinstance(daten, list):
+        # Grunddaten vom ersten Eintrag
+        datum = daten[0].get(
+            "datum",
+            ""
+        )
 
-            messung = daten[0]
+        uhrzeit = daten[0].get(
+            "uhrzeit",
+            ""
+        )
 
-        elif isinstance(daten, dict):
 
-            # falls API Features nutzt
-            if "features" in daten:
+        werte = {}
 
-                messung = daten["features"][0]["attributes"]
 
-            else:
+        # Alle Messwerte durchgehen
 
-                messung = daten
+        for eintrag in daten:
 
-        else:
+            name = eintrag.get(
+                "stoff_bezeichnung",
+                ""
+            )
 
-            raise Exception("Unbekanntes API Format")
+            wert = eintrag.get(
+                "messwert",
+                0
+            )
+
+
+            werte[name] = wert
 
 
 
         return {
 
 
-            "datum": finde(
-                messung,
-                "datum",
-                "Datum"
-            ),
+            "datum": datum,
+
+            "uhrzeit": uhrzeit,
 
 
-            "uhrzeit": finde(
-                messung,
-                "uhrzeit",
-                "Uhrzeit"
-            ),
+            "wassertemperatur":
+                werte.get(
+                    "Wassertemperatur",
+                    0
+                ),
 
 
-            "wassertemperatur": finde(
-                messung,
-                "wassertemperatur",
-                "Wassertemperatur"
-            ),
+            "sauerstoff":
+                werte.get(
+                    "Sauerstoff",
+                    0
+                ),
 
 
-            "sauerstoff": finde(
-                messung,
-                "sauerstoff",
-                "Sauerstoff"
-            ),
+            "ph":
+                werte.get(
+                    "pH-Wert",
+                    0
+                ),
 
 
-            "ph": finde(
-                messung,
-                "ph",
-                "pH",
-                "pH_Wert"
-            ),
+            "leitfaehigkeit":
+                werte.get(
+                    "Elektrische Leitfähigkeit bei 25°C",
+                    0
+                ),
 
 
-            "leitfaehigkeit": finde(
-                messung,
-                "elektrische_leitfaehigkeit",
-                "Elektrische Leitfähigkeit bei 25°C",
-                "leitfaehigkeit"
-            ),
+            "truebung":
+                werte.get(
+                    "Trübung",
+                    0
+                ),
 
 
-            "truebung": finde(
-                messung,
-                "truebung",
-                "Trübung"
-            ),
+            "nitrat":
+                werte.get(
+                    "Nitrat-Stickstoff",
+                    0
+                ),
 
 
-            "nitrat": finde(
-                messung,
-                "nitrat",
-                "Nitrat",
-                "Nitrat-Stickstoff"
-            ),
+            "gesamtchlorophyll":
+                werte.get(
+                    "Gesamtchlorophyll a",
+                    0
+                ),
 
 
-            "gesamtchlorophyll": finde(
-                messung,
-                "gesamtchlorophyll_a",
-                "Gesamtchlorophyll a"
-            ),
-
-
-            "blaualgen": finde(
-                messung,
-                "blaualgenchlorophyll_a",
-                "Blaualgenchlorophyll a"
-            )
+            "blaualgen":
+                werte.get(
+                    "Blaualgenchlorophyll a",
+                    0
+                )
 
         }
+
 
 
     except Exception as e:
 
 
+        print("WASSER FEHLER:")
+        print(e)
+
+
         return {
 
-            "fehler": f"Wasser API Fehler: {e}"
+            "datum": "",
+            "uhrzeit": "",
+
+            "wassertemperatur": 0,
+            "sauerstoff": 0,
+            "ph": 0,
+            "leitfaehigkeit": 0,
+            "truebung": 0,
+            "nitrat": 0,
+            "gesamtchlorophyll": 0,
+            "blaualgen": 0
 
         }

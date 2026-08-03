@@ -1,63 +1,60 @@
-from playwright.sync_api import sync_playwright
-import re
-
-URL = "https://geodaten-wasser.rlp-umwelt.de/gus/2691510700/messwerte"
+import requests
 
 
-def finde(text, name):
-
-    m = re.search(rf"{name}\s+([\d,]+)", text)
-
-    if not m:
-        return None
-
-    return float(m.group(1).replace(",", "."))
+URL = "https://geodaten-wasser.rlp-umwelt.de/api/data/gus_messwerte_messwerteaktuell?w=MESSST_NR=number:2691510700"
 
 
 def wasser_laden():
 
-    with sync_playwright() as p:
+    try:
 
-        browser = p.chromium.launch(headless=True)
+        antwort = requests.get(
+            URL,
+            timeout=15
+        )
 
-        page = browser.new_page()
+        daten = antwort.json()
 
-        page.goto(URL)
 
-        page.wait_for_load_state("networkidle")
-        page.wait_for_timeout(2000)
+        # Debug falls Format anders ist
+        if not daten:
+            raise Exception("Keine Wasserdaten erhalten")
 
-        text = page.locator("body").inner_text()
 
-        browser.close()
+        # erste Messung nehmen
+        messung = daten[0]
 
-    # Datum auslesen
-    datum = ""
 
-    m = re.search(r"Datum\s+(\d{2}\.\d{2}\.\d{4})", text)
+        return {
 
-    if m:
-        datum = m.group(1)
+            "datum": messung.get("datum", ""),
+            "uhrzeit": messung.get("uhrzeit", ""),
 
-    # Uhrzeit auslesen
-    uhrzeit = ""
+            "wassertemperatur": messung.get("wassertemperatur"),
+            "sauerstoff": messung.get("sauerstoff"),
+            "ph": messung.get("ph"),
 
-    m = re.search(r"Uhrzeit.*?(\d{2}:\d{2})", text, re.DOTALL)
+            "leitfaehigkeit": messung.get(
+                "elektrische_leitfaehigkeit"
+            ),
 
-    if m:
-        uhrzeit = m.group(1)
+            "truebung": messung.get("truebung"),
 
-    return {
+            "nitrat": messung.get("nitrat"),
 
-        "datum": datum,
-        "uhrzeit": uhrzeit,
+            "gesamtchlorophyll": messung.get(
+                "gesamtchlorophyll_a"
+            ),
 
-        "wassertemperatur": finde(text, "Wassertemperatur"),
-        "sauerstoff": finde(text, "Sauerstoff"),
-        "ph": finde(text, "pH-Wert"),
-        "leitfaehigkeit": finde(text, "Elektrische Leitfähigkeit bei 25°C"),
-        "truebung": finde(text, "Trübung"),
-        "nitrat": finde(text, "Nitrat-Stickstoff"),
-        "gesamtchlorophyll": finde(text, "Gesamtchlorophyll a"),
-        "blaualgen": finde(text, "Blaualgenchlorophyll a"),
-    }
+            "blaualgen": messung.get(
+                "blaualgenchlorophyll_a"
+            )
+
+        }
+
+
+    except Exception as e:
+
+        return {
+            "fehler": f"Wasser API Fehler: {e}"
+        }

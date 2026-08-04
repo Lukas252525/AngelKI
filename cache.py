@@ -40,8 +40,8 @@ def holen(name):
         alter = time.time() - zeit
 
 
-        # 15 Minuten gültig
-        if alter < 900:
+        # 60 Minuten gültig
+        if alter < 3600:
             return daten
 
 

@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="de">
+
+<head>
+
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<title>AngelKI</title>
+
+
+
+<style>
+
+
+body {
+
+    margin:0;
+    padding:15px;
+    font-family:Arial,sans-serif;
+    background:#0f172a;
+    color:white;
+
+}
+
+
+
+.container {
+
+    max-width:950px;
+    margin:auto;
+
+}
+
+
+
+h1 {
+
+    text-align:center;
+    font-size:40px;
+
+}
+
+
+
+
+button {
+
+    width:100%;
+    padding:16px;
+    border:none;
+    border-radius:15px;
+    background:#2563eb;
+    color:white;
+    font-size:20px;
+    cursor:pointer;
+
+}
+
+
+
+
+.card {
+
+    background:#1e293b;
+    padding:20px;
+    border-radius:18px;
+    margin-top:20px;
+
+}
+
+
+
+
+.title {
+
+    font-size:26px;
+    font-weight:bold;
+    margin-bottom:15px;
+
+}
+
+
+
+
+.big {
+
+    font-size:70px;
+    text-align:center;
+    font-weight:bold;
+
+}
+
+
+
+
+.status {
+
+    text-align:center;
+    font-size:24px;
+    margin-top:10px;
+
+}
+
+
+
+
+.green {
+
+    color:#4ade80;
+
+}
+
+
+
+
+.yellow {
+
+    color:#facc15;
+
+}
+
+
+
+
+.red {
+
+    color:#f87171;
+
+}
+
+
+
+
+.row {
+
+    display:flex;
+    justify-content:space-between;
+    padding:10px 0;
+    border-bottom:1px solid #334155;
+
+}
+
+
+
+
+.reason {
+
+    margin:7px 0;
+
+}
+
+
+
+
+.fish {
+
+    background:#172554;
+    padding:15px;
+    border-radius:12px;
+    margin-top:12px;
+
+}
+
+
+
+
+.hour-grid {
+
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:10px;
+
+}
+
+
+
+
+.hour {
+
+    background:#334155;
+    padding:12px;
+    border-radius:12px;
+    text-align:center;
+
+}
+
+
+
+
+.progress {
+
+    width:100%;
+    height:18px;
+    background:#334155;
+    border-radius:10px;
+    overflow:hidden;
+
+}
+
+
+
+
+.progress-bar {
+
+    height:100%;
+    background:#22c55e;
+
+}
+
+
+
+
+.info {
+
+    color:#94a3b8;
+    margin-bottom:12px;
+
+}
+
+
+
+
+
+@media(max-width:600px){
+
+
+.hour-grid {
+
+grid-template-columns:repeat(2,1fr);
+
+}
+
+
+
+h1 {
+
+font-size:30px;
+
+}
+
+
+
+}
+
+
+
+
+</style>
+
+
+</head>
+
+
+
+<body>
+
+
+
+<div class="container">
+
+
+
+<h1>
+🎣 AngelKI
+</h1>
+
+
+
+
+<button onclick="laden()">
+
+Analyse starten
+
+</button>
+
+
+
+
+<div id="app"></div>
+
+
+
+</div>
+
+
+
+
+
+<script>
+
+
+
+async function laden(){
+
+
+
+let app=document.getElementById("app");
+
+
+
+app.innerHTML="⏳ Lade Angelanalyse...";
+
+
+
+try {
+
+
+
+let antwort = await fetch(
+"http://127.0.0.1:8000/angelki"
+);
+
+
+
+let daten = await antwort.json();
+
+
+
+if(daten.fehler){
+
+
+app.innerHTML =
+"❌ Fehler: " + daten.fehler;
+
+
+return;
+
+
+}
+
+
+
+
+let index = daten.beissindex;
+
+
+
+
+let farbe =
+
+index>=75 ? "green" :
+
+index>=50 ? "yellow" :
+
+"red";
+
+
+
+
+
+let bewertung =
+
+index>=75 ?
+
+"Sehr gute Bedingungen 🎯" :
+
+index>=50 ?
+
+"Gute Bedingungen 🟡" :
+
+"Schwierige Bedingungen 🔴";
+
+
+
+
+
+let html = `
+
+
+
+<div class="card">
+
+
+
+<div class="title">
+
+🌊 ${daten.gewaesser}
+
+</div>
+
+
+
+
+<div class="big ${farbe}">
+
+${index}/100
+
+</div>
+
+
+
+
+<div class="status">
+
+${bewertung}
+
+</div>
+
+
+
+
+</div>
+
+
+
+`;
+
+id="teil2"
+
+html += `
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🎣 Beste Angelzeit heute
+
+</div>
+
+
+
+<div class="fish">
+
+
+<h2>
+
+${daten.angelplanung.beste_wahl.fisch}
+
+</h2>
+
+
+
+<div class="row">
+
+<span>
+Aktivität
+</span>
+
+<b>
+${daten.angelplanung.beste_wahl.aktivitaet}/100
+</b>
+
+</div>
+
+
+
+<div class="progress">
+
+<div class="progress-bar"
+
+style="width:${daten.angelplanung.beste_wahl.aktivitaet}%">
+
+</div>
+
+</div>
+
+
+
+<br>
+
+
+
+<div class="row">
+
+<span>
+Beste Zeit
+</span>
+
+<b>
+${daten.angelplanung.beste_wahl.beste_zeit}
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Beschreibung
+</span>
+
+<b>
+${daten.angelplanung.beste_wahl.beschreibung}
+</b>
+
+</div>
+
+
+
+<p>
+
+⏳ Noch bis:
+<b>
+${daten.angelplanung.beste_wahl.noch_bis}
+</b>
+
+</p>
+
+
+
+
+${daten.angelplanung.beste_wahl.gruende.map(g=>`
+
+<div class="reason">
+
+✓ ${g}
+
+</div>
+
+`).join("")}
+
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🐟 Alle Fischzeiten heute
+
+</div>
+
+
+
+
+${daten.angelplanung.alle_fische.map(f=>`
+
+
+
+<div class="fish">
+
+
+
+<h3>
+
+${f.fisch}
+
+</h3>
+
+
+
+
+<div class="row">
+
+<span>
+Aktivität
+</span>
+
+<b>
+${f.aktivitaet}/100
+</b>
+
+</div>
+
+
+
+
+<div class="progress">
+
+<div class="progress-bar"
+
+style="width:${f.aktivitaet}%">
+
+</div>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Beste Zeit
+</span>
+
+<b>
+${f.beste_zeit}
+</b>
+
+</div>
+
+
+
+<div class="reason">
+
+${f.beschreibung}
+
+</div>
+
+
+
+${f.gruende.map(g=>`
+
+<div class="reason">
+
+✓ ${g}
+
+</div>
+
+
+`).join("")}
+
+
+
+</div>
+
+
+
+`).join("")}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🎯 Aktuelle Empfehlung
+
+</div>
+
+
+
+<div class="row">
+
+<span>
+Fisch
+</span>
+
+<b>
+${daten.empfehlung.fisch}
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Chance
+</span>
+
+<b>
+${daten.empfehlung.chance}%
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Spot
+</span>
+
+<b>
+${daten.empfehlung.spot}
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Methode
+</span>
+
+<b>
+${daten.empfehlung.methode}
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Tiefe
+</span>
+
+<b>
+${daten.empfehlung.tiefe}
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Köderfarbe
+</span>
+
+<b>
+${daten.empfehlung.farbe}
+</b>
+
+</div>
+
+
+
+
+
+${daten.empfehlung.gruende.map(g=>`
+
+<div class="reason">
+
+✓ ${g}
+
+</div>
+
+`).join("")}
+
+
+
+</div>
+
+
+
+`;
+
+id="teil3"
+
+html += `
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+📊 Bewertung
+
+</div>
+
+
+
+
+${Object.entries(daten.kategorien).map(([name,wert])=>`
+
+
+
+<div style="margin-bottom:25px">
+
+
+
+<h3>
+
+${name}
+
+</h3>
+
+
+
+
+<div class="row">
+
+<span>
+
+Punkte
+
+</span>
+
+
+<b>
+
+${wert.punkte}/${wert.max}
+
+</b>
+
+
+</div>
+
+
+
+
+<div class="progress">
+
+<div class="progress-bar"
+
+style="width:${(wert.punkte/wert.max)*100}%">
+
+</div>
+
+</div>
+
+
+
+
+
+${wert.gruende.map(g=>`
+
+
+<div class="reason">
+
+✓ ${g}
+
+</div>
+
+
+`).join("")}
+
+
+
+
+
+</div>
+
+
+
+`).join("")}
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🌤 Wetter aktuell
+
+</div>
+
+
+
+<div class="info">
+
+Daten:
+
+${daten.wetter.datum}
+
+${daten.wetter.uhrzeit}
+
+Uhr
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Temperatur
+</span>
+
+<b>
+${daten.wetter.temperature_2m} °C
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Gefühlt
+</span>
+
+<b>
+${daten.wetter.apparent_temperature} °C
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Wind
+</span>
+
+<b>
+${daten.wetter.wind_speed_10m} km/h
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Windrichtung
+</span>
+
+<b>
+${daten.wetter.wind_direction_text}
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Bewölkung
+</span>
+
+<b>
+${daten.wetter.cloud_cover} %
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+Luftdruck
+</span>
+
+<b>
+${daten.wetter.pressure_msl} hPa
+</b>
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+📈 Wetter Trends
+
+</div>
+
+
+
+
+
+<div class="fish">
+
+
+<h3>
+
+📉 Luftdruck 24h
+
+</h3>
+
+
+
+<div class="row">
+
+<span>
+
+Jetzt
+
+</span>
+
+<b>
+
+${daten.wetter.luftdruck_trend.jetzt} hPa
+
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+
+In 24h
+
+</span>
+
+<b>
+
+${daten.wetter.luftdruck_trend.wert_24h} hPa
+
+</b>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<div class="fish">
+
+
+<h3>
+
+🌡 Temperatur 24h
+
+</h3>
+
+
+
+<div class="row">
+
+<span>
+
+Jetzt
+
+</span>
+
+<b>
+
+${daten.wetter.temperatur_trend.jetzt} °C
+
+</b>
+
+</div>
+
+
+
+
+<div class="row">
+
+<span>
+
+In 24h
+
+</span>
+
+<b>
+
+${daten.wetter.temperatur_trend.wert_24h} °C
+
+</b>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="fish">
+
+
+<h3>
+
+☁️ Bewölkung 6h
+
+</h3>
+
+
+
+<div class="row">
+
+<span>
+
+Jetzt
+
+</span>
+
+<b>
+
+${daten.wetter.bewoelkung_trend.jetzt} %
+
+</b>
+
+</div>
+
+
+
+<div class="row">
+
+<span>
+
+In 6h
+
+</span>
+
+<b>
+
+${daten.wetter.bewoelkung_trend.wert_6h} %
+
+</b>
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+<div class="fish">
+
+
+<h3>
+
+🌧 Niederschlag 6h
+
+</h3>
+
+
+
+<div class="row">
+
+<span>
+
+Menge
+
+</span>
+
+<b>
+
+${daten.wetter.niederschlag_trend.menge} mm
+
+</b>
+
+</div>
+
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+`;
+
+id="teil4"
+
+
+html += `
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🌤 Wetterprognose nächste Stunden
+
+</div>
+
+
+
+
+
+<div class="hour-grid">
+
+
+
+
+
+${(() => {
+
+
+let jetzt = new Date();
+
+
+let aktuelleStunde = jetzt.getHours();
+
+
+
+let start = daten.wetter.hourly_time.findIndex(
+
+zeit =>
+
+parseInt(zeit.substring(11,13)) >= aktuelleStunde
+
+);
+
+
+
+if(start < 0){
+
+    start = 0;
+
+}
+
+
+
+
+return daten.wetter.hourly_time
+
+.slice(start,start+12)
+
+.map((zeit,i)=>{
+
+
+let index = start+i;
+
+
+
+return `
+
+
+
+<div class="hour">
+
+
+<b>
+
+${zeit.substring(11,16)}
+
+</b>
+
+
+<br><br>
+
+
+🌡️
+
+${daten.wetter.hourly_temperature[index]}°C
+
+
+<br>
+
+
+💨
+
+${daten.wetter.hourly_pressure[index]} hPa
+
+
+
+<br>
+
+
+☁️
+
+${daten.wetter.hourly_cloud[index]} %
+
+
+
+<br>
+
+
+🌧️
+
+${daten.wetter.hourly_precipitation[index]} mm
+
+
+
+</div>
+
+
+
+`;
+
+
+
+}).join("");
+
+
+
+})()}
+
+
+
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🌊 Wasseranalyse
+
+</div>
+
+
+
+
+<div class="info">
+
+Messung:
+
+${daten.wasser.datum.slice(0,10)}
+
+${daten.wasser.uhrzeit}
+
+Uhr
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Wassertemperatur
+
+</span>
+
+
+<b>
+
+${daten.wasser.wassertemperatur} °C
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Sauerstoff
+
+</span>
+
+
+<b>
+
+${daten.wasser.sauerstoff} mg/l
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+pH Wert
+
+</span>
+
+
+<b>
+
+${daten.wasser.ph}
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Leitfähigkeit
+
+</span>
+
+
+<b>
+
+${daten.wasser.leitfaehigkeit}
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Trübung
+
+</span>
+
+
+<b>
+
+${daten.wasser.truebung}
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Nitrat
+
+</span>
+
+
+<b>
+
+${daten.wasser.nitrat}
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Chlorophyll
+
+</span>
+
+
+<b>
+
+${daten.wasser.gesamtchlorophyll}
+
+</b>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🟢 Blaualgen Ampel
+
+</div>
+
+
+
+
+
+${
+
+daten.wasser.blaualgen < 10
+
+?
+
+"🟢 Sehr geringe Belastung"
+
+:
+
+daten.wasser.blaualgen < 30
+
+?
+
+"🟡 Erhöhte Belastung"
+
+:
+
+"🔴 Hohe Belastung"
+
+}
+
+
+
+
+<br><br>
+
+
+
+
+<div class="row">
+
+<span>
+
+Messwert
+
+</span>
+
+
+<b>
+
+${daten.wasser.blaualgen} µg/l
+
+</b>
+
+
+</div>
+
+
+
+
+
+<div class="info">
+
+
+Bewertung der Blaualgenbelastung anhand des aktuellen Messwertes.
+
+</div>
+
+
+
+
+</div>
+
+
+
+
+
+`;
+
+
+html += `
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🌊 Hydrologie
+
+</div>
+
+
+
+
+
+<div class="info">
+
+Pegel Messung:
+
+${daten.pegel.zeit}
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Station
+
+</span>
+
+
+<b>
+
+${daten.pegel.station}
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Pegel
+
+</span>
+
+
+<b>
+
+${daten.pegel.pegel}
+
+${daten.pegel.einheit}
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="info">
+
+Durchfluss Messung:
+
+${daten.durchfluss.datum}
+
+${daten.durchfluss.uhrzeit}
+
+</div>
+
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Durchfluss
+
+</span>
+
+
+<b>
+
+${daten.durchfluss.durchfluss}
+
+m³/s
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🌙 Mondphase & Beißverhalten
+
+</div>
+
+
+
+
+
+
+<div class="fish">
+
+
+<h2 style="text-align:center">
+
+${daten.mond.name}
+
+</h2>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Mondalter
+
+</span>
+
+
+<b>
+
+${daten.mond.alter} Tage
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Beleuchtung
+
+</span>
+
+
+<b>
+
+${daten.mond.beleuchtung} %
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="progress">
+
+<div class="progress-bar"
+
+style="width:${daten.mond.beleuchtung}%">
+
+</div>
+
+</div>
+
+
+
+
+
+
+<br>
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Einfluss
+
+</span>
+
+
+<b>
+
+${daten.mond.einfluss}
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Bewertung
+
+</span>
+
+
+<b>
+
+${daten.mond.bewertung}/10
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+
+
+<div class="reason">
+
+✓ ${daten.mond.beschreibung}
+
+</div>
+
+
+
+
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div class="title">
+
+🏆 Fischranking
+
+</div>
+
+
+
+
+
+
+
+${daten.empfehlung.ranking.map((f,i)=>`
+
+
+
+
+<div class="fish">
+
+
+<h3>
+
+${i+1}. ${f.fisch}
+
+</h3>
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Bewertung
+
+</span>
+
+
+<b>
+
+${f.punkte} Punkte
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Spot
+
+</span>
+
+
+<b>
+
+${f.spot}
+
+</b>
+
+
+</div>
+
+
+
+
+
+
+
+<div class="row">
+
+<span>
+
+Methode
+
+</span>
+
+
+<b>
+
+${f.methode}
+
+</b>
+
+
+</div>
+
+
+
+
+
+</div>
+
+
+
+
+
+`).join("")}
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+
+
+<div class="card">
+
+
+<div style="text-align:center">
+
+
+🎣 AngelKI Analyse abgeschlossen
+
+
+<br><br>
+
+
+Letzte Aktualisierung:
+
+<br>
+
+
+${daten.wasser.datum}
+
+${daten.wasser.uhrzeit}
+
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+`;
+
+
+
+
+
+app.innerHTML = html;
+
+
+
+
+}
+
+
+
+
+
+catch(e){
+
+
+
+app.innerHTML =
+
+"❌ Fehler: " + e;
+
+
+
+}
+
+
+
+
+
+}
+
+
+
+</script>
+
+
+</body>
+
+
+</html>

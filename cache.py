@@ -1,16 +1,44 @@
 import time
+import json
+import os
 
 
-speicher = {}
+DATEI = "cache.json"
+
+
+def cache_laden():
+
+    if not os.path.exists(DATEI):
+        return {}
+
+    try:
+        with open(DATEI, "r", encoding="utf-8") as f:
+            return json.load(f)
+
+    except:
+        return {}
+
+
+
+def cache_speichern(cache):
+
+    with open(DATEI, "w", encoding="utf-8") as f:
+        json.dump(cache, f)
+
 
 
 def holen(name):
 
-    if name in speicher:
+    cache = cache_laden()
 
-        daten, zeit = speicher[name]
+
+    if name in cache:
+
+        daten = cache[name]["daten"]
+        zeit = cache[name]["zeit"]
 
         alter = time.time() - zeit
+
 
         # 15 Minuten gültig
         if alter < 900:
@@ -21,9 +49,18 @@ def holen(name):
 
 
 
+
 def speichern(name, daten):
 
-    speicher[name] = (
-        daten,
-        time.time()
-    )
+    cache = cache_laden()
+
+
+    cache[name] = {
+
+        "daten": daten,
+        "zeit": time.time()
+
+    }
+
+
+    cache_speichern(cache)

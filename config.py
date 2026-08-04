@@ -6,8 +6,8 @@
 GEWAESSER = "Mosel Fankel"
 
 # Position (Open-Meteo)
-LATITUDE = 50.1716
-LONGITUDE = 7.3445
+LATITUDE = 49.95
+LONGITUDE = 7.117
 
 # Wasserstation
 MESSSTATION = 2691510700

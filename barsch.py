@@ -68,7 +68,7 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
             gruende.append("Frühjahr")
     if 6 <= monat <= 8:
 
-        punkte += 2
+        punkte += 4
         gruende.append("Sommerphase")
 
 

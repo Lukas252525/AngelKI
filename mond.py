@@ -23,7 +23,16 @@ def mond_laden():
 
 
 
+    notfall_sonnenaufgang = "2026-01-01T08:00"
+
+    notfall_sonnenuntergang = "2026-01-01T17:00"
+
+
+
+
+
     try:
+
 
         antwort = requests.get(
 
@@ -49,6 +58,7 @@ def mond_laden():
 
         return {
 
+
             "wert": 0,
 
             "name": "🌙 unbekannt",
@@ -63,11 +73,13 @@ def mond_laden():
 
             "beschreibung": "Monddaten aktuell nicht verfügbar",
 
-            "sonnenaufgang": "",
+            "sonnenaufgang": notfall_sonnenaufgang,
 
-            "sonnenuntergang": ""
+            "sonnenuntergang": notfall_sonnenuntergang
 
         }
+
+
 
 
 
@@ -104,11 +116,12 @@ def mond_laden():
 
             "beschreibung": "Monddaten aktuell nicht verfügbar",
 
-            "sonnenaufgang": "",
+            "sonnenaufgang": notfall_sonnenaufgang,
 
-            "sonnenuntergang": ""
+            "sonnenuntergang": notfall_sonnenuntergang
 
         }
+
 
 
 
@@ -125,9 +138,11 @@ def mond_laden():
         name = "🌑 Neumond"
 
 
+
     elif phase < 0.1875:
 
         name = "🌒 zunehmende Sichel"
+
 
 
     elif phase < 0.3125:
@@ -135,9 +150,11 @@ def mond_laden():
         name = "🌓 Erstes Viertel"
 
 
+
     elif phase < 0.4375:
 
         name = "🌔 zunehmender Mond"
+
 
 
     elif phase < 0.5625:
@@ -145,14 +162,17 @@ def mond_laden():
         name = "🌕 Vollmond"
 
 
+
     elif phase < 0.6875:
 
         name = "🌖 abnehmender Mond"
 
 
+
     elif phase < 0.8125:
 
         name = "🌗 Letztes Viertel"
+
 
 
     else:
@@ -163,20 +183,27 @@ def mond_laden():
 
 
 
-    # Mondalter grob berechnen
 
     alter = round(
+
         phase * 29.53,
+
         1
+
     )
+
+
 
 
 
     beleuchtung = round(
-        abs(
-            0.5 - phase
-        ) * 200
+
+        abs(0.5 - phase) * 200
+
     )
+
+
+
 
 
 
@@ -187,6 +214,7 @@ def mond_laden():
         "🌔 zunehmender Mond"
 
     ]:
+
 
         bewertung = 8
 
@@ -200,6 +228,9 @@ def mond_laden():
         )
 
 
+
+
+
     elif name in [
 
         "🌑 Neumond",
@@ -207,6 +238,7 @@ def mond_laden():
         "🌒 zunehmende Sichel"
 
     ]:
+
 
         bewertung = 7
 
@@ -220,7 +252,11 @@ def mond_laden():
         )
 
 
+
+
+
     else:
+
 
         bewertung = 6
 
@@ -232,6 +268,8 @@ def mond_laden():
             "gute Nachtbedingungen bieten."
 
         )
+
+
 
 
 

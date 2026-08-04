@@ -74,6 +74,19 @@ def mond_laden():
 
 
 
+        # Cache als Notfall
+
+        gespeichert = holen("mond")
+
+
+        if gespeichert:
+
+            print("CACHE MOND ALS NOTFALL FALLBACK")
+
+            return gespeichert
+
+
+
         return {
 
 
@@ -96,8 +109,6 @@ def mond_laden():
             "sonnenuntergang": notfall_sonnenuntergang
 
         }
-
-
 
 
 
@@ -117,6 +128,19 @@ def mond_laden():
 
 
 
+        # Cache als Notfall
+
+        gespeichert = holen("mond")
+
+
+        if gespeichert:
+
+            print("CACHE MOND ALS NOTFALL FALLBACK")
+
+            return gespeichert
+
+
+
         return {
 
 
@@ -144,7 +168,6 @@ def mond_laden():
 
 
 
-
     phase = daten["daily"]["moon_phase"][0]
 
 
@@ -156,11 +179,9 @@ def mond_laden():
         name = "🌑 Neumond"
 
 
-
     elif phase < 0.1875:
 
         name = "🌒 zunehmende Sichel"
-
 
 
     elif phase < 0.3125:
@@ -168,11 +189,9 @@ def mond_laden():
         name = "🌓 Erstes Viertel"
 
 
-
     elif phase < 0.4375:
 
         name = "🌔 zunehmender Mond"
-
 
 
     elif phase < 0.5625:
@@ -180,11 +199,9 @@ def mond_laden():
         name = "🌕 Vollmond"
 
 
-
     elif phase < 0.6875:
 
         name = "🌖 abnehmender Mond"
-
 
 
     elif phase < 0.8125:
@@ -192,11 +209,9 @@ def mond_laden():
         name = "🌗 Letztes Viertel"
 
 
-
     else:
 
         name = "🌘 abnehmende Sichel"
-
 
 
 
@@ -292,6 +307,7 @@ def mond_laden():
 
 
 
+
     ergebnis = {
 
 
@@ -345,9 +361,12 @@ def mond_laden():
 
 
 
+
+
     # ----------------------------------
     # Mond speichern
     # ----------------------------------
+
 
     speichern(
 

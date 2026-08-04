@@ -1,10 +1,28 @@
 import requests
 
 from config import LATITUDE, LONGITUDE
+from cache import holen, speichern
 
 
 
 def mond_laden():
+
+
+    # ----------------------------------
+    # Cache prüfen
+    # ----------------------------------
+
+    gespeichert = holen("mond")
+
+
+    if gespeichert:
+
+        print("CACHE MOND")
+
+        return gespeichert
+
+
+
 
 
     url = (
@@ -274,8 +292,7 @@ def mond_laden():
 
 
 
-
-    return {
+    ergebnis = {
 
 
         "wert":
@@ -323,3 +340,27 @@ def mond_laden():
             daten["daily"]["sunset"][0]
 
     }
+
+
+
+
+
+    # ----------------------------------
+    # Mond speichern
+    # ----------------------------------
+
+    speichern(
+
+        "mond",
+
+        ergebnis
+
+    )
+
+
+
+    print("MOND GESPEICHERT")
+
+
+
+    return ergebnis

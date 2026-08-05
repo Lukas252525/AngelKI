@@ -80,7 +80,7 @@ def holen(
         # Notfall Cache
         # bis 24 Stunden alt erlaubt
 
-        if notfall and alter < 86400:
+        if notfall and alter < 10800:
 
             return daten
 

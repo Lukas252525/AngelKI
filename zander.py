@@ -62,22 +62,22 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 9 <= monat <= 10:
         
-                punkte += 5
+                punkte += 6
                 gruende.append("Herbstphase")
     if 4 <= monat <= 5:
         
-                punkte += 3
+                punkte += 2
                 gruende.append("Frühjahr")
     if 6 <= monat <= 8:
 
-        punkte += 2
+        punkte += 0
         gruende.append("Sommerphase")
 
 
 
     if 6 <= monat <= 8 and "Nacht" in phase:
 
-        punkte += 5
+        punkte += 3
         gruende.append("Sommernacht erhöht Zanderaktivität")
 
 
@@ -88,19 +88,19 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 16 <= wasser["wassertemperatur"] <= 22:
 
-        punkte += 12
+        punkte += 11
         gruende.append("Optimale Zandertemperatur")
 
 
     elif wasser["wassertemperatur"] <= 25:
 
-        punkte += 6
+        punkte += 4
         gruende.append("Noch gute Wassertemperatur")
 
 
     else:
 
-        punkte -= 8
+        punkte -= 10
         gruende.append("Sehr warmes Wasser")
 
 
@@ -111,7 +111,7 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if wasser["sauerstoff"] >= 10:
 
-        punkte += 8
+        punkte += 6
         gruende.append("Hoher Sauerstoff")
 
 
@@ -122,13 +122,13 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 10 <= wasser["truebung"] <= 25:
 
-        punkte += 10
+        punkte += 8
         gruende.append("Passende Räubertrübung")
 
 
     elif wasser["truebung"] <= 35:
 
-        punkte += 5
+        punkte += 3
 
 
 
@@ -138,13 +138,13 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 50 <= durchfluss["durchfluss"] <= 150:
 
-        punkte += 10
+        punkte += 8
         gruende.append("Guter Durchfluss")
 
 
     elif 35 <= durchfluss["durchfluss"] < 50:
 
-        punkte += 5
+        punkte += 4
         gruende.append("Geringer Durchfluss")
 
 
@@ -155,25 +155,25 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if "Nacht" in phase:
 
-        punkte += 20
+        punkte += 18
         gruende.append("Starke Nachtaktivität")
 
 
     elif "Abend" in phase:
 
-        punkte += 15
+        punkte += 11
         gruende.append("Abendbeißzeit")
 
 
     elif "Morgen" in phase:
 
-        punkte += 8
+        punkte += 5
         gruende.append("Morgenaktivität")
 
 
     else:
 
-        punkte -= 8
+        punkte -= 18
         gruende.append("Tageslicht reduziert Zanderaktivität")
 
 

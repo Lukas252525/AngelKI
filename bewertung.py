@@ -8,16 +8,16 @@ from wissen import *
 def bewerte_wassertemperatur(temperatur):
 
     if WASSERTEMPERATUR_OPTIMAL[0] <= temperatur <= WASSERTEMPERATUR_OPTIMAL[1]:
-        return 15, "Optimale Wassertemperatur"
+        return 13, "Optimale Wassertemperatur"
 
     elif WASSERTEMPERATUR_GUT[0] <= temperatur < WASSERTEMPERATUR_GUT[1]:
-        return 12, "Gute Wassertemperatur"
+        return 10, "Gute Wassertemperatur"
 
     elif WASSERTEMPERATUR_NOCH_GUT[0] < temperatur <= WASSERTEMPERATUR_NOCH_GUT[1]:
-        return 10, "Noch gute Wassertemperatur"
+        return 18, "Noch gute Wassertemperatur"
 
     elif WASSERTEMPERATUR_WARM[0] < temperatur <= WASSERTEMPERATUR_WARM[1]:
-        return 5, "Wasser recht warm"
+        return 3, "Wasser recht warm"
 
     return 0, "Ungünstige Wassertemperatur"
 
@@ -25,13 +25,13 @@ def bewerte_wassertemperatur(temperatur):
 def bewerte_sauerstoff(sauerstoff):
 
     if sauerstoff >= SAUERSTOFF_SEHR_GUT:
-        return 15, "Sehr hoher Sauerstoff"
+        return 12, "Sehr hoher Sauerstoff"
 
     elif sauerstoff >= SAUERSTOFF_GUT:
-        return 10, "Guter Sauerstoff"
+        return 8, "Guter Sauerstoff"
 
     elif sauerstoff >= SAUERSTOFF_AUSREICHEND:
-        return 5, "Ausreichender Sauerstoff"
+        return 4, "Ausreichender Sauerstoff"
 
     return 0, "Wenig Sauerstoff"
 
@@ -39,10 +39,10 @@ def bewerte_sauerstoff(sauerstoff):
 def bewerte_truebung(truebung):
 
     if TRUEBUNG_OPTIMAL[0] <= truebung <= TRUEBUNG_OPTIMAL[1]:
-        return 10, "Gute Trübung"
+        return 8, "Gute Trübung"
 
     elif TRUEBUNG_ERHOEHT[0] < truebung <= TRUEBUNG_ERHOEHT[1]:
-        return 6, "Erhöhte Trübung"
+        return 5, "Erhöhte Trübung"
 
     return 0, "Ungünstige Trübung"
 
@@ -50,10 +50,10 @@ def bewerte_truebung(truebung):
 def bewerte_blaualgen(blaualgen):
 
     if blaualgen < BLAUALGEN_GERING:
-        return 5, "Kaum Blaualgen"
+        return 4, "Kaum Blaualgen"
 
     elif blaualgen < BLAUALGEN_ERHOEHT:
-        return 3, "Leichte Blaualgenbelastung"
+        return 2, "Leichte Blaualgenbelastung"
 
     return 0, "Viele Blaualgen"
 
@@ -65,16 +65,16 @@ def bewerte_blaualgen(blaualgen):
 def bewerte_durchfluss(durchfluss):
 
     if DURCHFLUSS_OPTIMAL[0] <= durchfluss <= DURCHFLUSS_OPTIMAL[1]:
-        return 5, "Optimaler Durchfluss"
+        return 4, "Optimaler Durchfluss"
 
     elif DURCHFLUSS_NIEDRIG[0] <= durchfluss < DURCHFLUSS_NIEDRIG[1]:
-        return 4, "Niedriger Durchfluss"
+        return 3, "Niedriger Durchfluss"
 
     elif DURCHFLUSS_STARK_NIEDRIG[0] <= durchfluss < DURCHFLUSS_STARK_NIEDRIG[1]:
-        return 2, "Starkes Niedrigwasser"
+        return 1, "Starkes Niedrigwasser"
 
     elif DURCHFLUSS_HOCH[0] < durchfluss <= DURCHFLUSS_HOCH[1]:
-        return 3, "Erhöhter Durchfluss"
+        return 2, "Erhöhter Durchfluss"
 
     elif durchfluss > DURCHFLUSS_HOCH[1]:
         return 0, "Sehr hoher Durchfluss"
@@ -85,10 +85,10 @@ def bewerte_durchfluss(durchfluss):
 def bewerte_pegel(pegel):
 
     if pegel <= PEGEL_NORMAL_MAX:
-        return 5, "Normaler Staupegel"
+        return 4, "Normaler Staupegel"
 
     elif pegel <= PEGEL_ERHOEHT_MAX:
-        return 3, "Erhöhter Pegel"
+        return 2, "Erhöhter Pegel"
 
     return 0, "Hochwasser"
 
@@ -102,15 +102,15 @@ def bewerte_tageszeit(tageszeit):
     phase = tageszeit["phase"]
 
     if "Morgenbeißzeit" in phase:
-        return 10, ["Morgenbeißzeit"]
+        return 9, ["Morgenbeißzeit"]
 
     elif "Abendbeißzeit" in phase:
-        return 10, ["Abendbeißzeit"]
+        return 9, ["Abendbeißzeit"]
 
     elif "Nacht" in phase:
-        return 8, ["Nacht"]
+        return 7, ["Nacht"]
 
-    return 4, ["Tagesphase"]
+    return 3, ["Tagesphase"]
 
 
 # ----------------------------------------------------------
@@ -120,7 +120,7 @@ def bewerte_tageszeit(tageszeit):
 def bewerte_luftdruck(luftdruck):
 
     if LUFTDRUCK_OPTIMAL[0] <= luftdruck <= LUFTDRUCK_OPTIMAL[1]:
-        return 5, "Stabiler Luftdruck"
+        return 4, "Stabiler Luftdruck"
 
     return 0, "Ungünstiger Luftdruck"
 
@@ -128,18 +128,18 @@ def bewerte_luftdruck(luftdruck):
 def bewerte_luftdrucktrend(luftdruck):
 
     if luftdruck["differenz"] >= LUFTDRUCK_STEIGEND:
-        return 10, "Steigender Luftdrucktrend"
+        return 8, "Steigender Luftdrucktrend"
 
     elif luftdruck["differenz"] <= LUFTDRUCK_FALLEND:
-        return 3, "Fallender Luftdrucktrend"
+        return 2, "Fallender Luftdrucktrend"
 
-    return 7, "Stabiler Luftdrucktrend"
+    return 6, "Stabiler Luftdrucktrend"
 
 
 def bewerte_wind(wind):
 
     if WIND_OPTIMAL[0] <= wind <= WIND_OPTIMAL[1]:
-        return 10, "Optimaler Wind"
+        return 8, "Optimaler Wind"
 
     return 0, "Ungünstiger Wind"
 
@@ -147,12 +147,12 @@ def bewerte_wind(wind):
 def bewerte_bewoelkung(bewoelkung):
 
     if BEWOELKUNG_OPTIMAL[0] <= bewoelkung <= BEWOELKUNG_OPTIMAL[1]:
-        return 10, "Gute Bewölkung"
+        return 8, "Gute Bewölkung"
 
     elif BEWOELKUNG_GUT[0] <= bewoelkung < BEWOELKUNG_GUT[1]:
-        return 6, "Leichte Bewölkung"
+        return 5, "Leichte Bewölkung"
 
-    return 3, "Klarer Himmel"
+    return 2, "Klarer Himmel"
 
 
 # ----------------------------------------------------------
@@ -251,9 +251,9 @@ def bewerte_mond(mond):
     phase = mond["wert"]
 
     if phase < 0.15 or phase > 0.85:
-        return 10, ["Günstige Mondphase"]
+        return 8, ["Günstige Mondphase"]
 
     elif 0.40 <= phase <= 0.60:
-        return 8, ["Vollmondnähe"]
+        return 6, ["Vollmondnähe"]
 
-    return 5, ["Neutrale Mondphase"]
+    return 4, ["Neutrale Mondphase"]

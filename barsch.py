@@ -60,15 +60,15 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 9 <= monat <= 10:
     
-            punkte += 5
+            punkte += 6
             gruende.append("Herbstphase")
     if 4 <= monat <= 5:
     
-            punkte += 3
+            punkte += 2
             gruende.append("Frühjahr")
     if 6 <= monat <= 8:
 
-        punkte += 4
+        punkte += 3
         gruende.append("Sommerphase")
 
 
@@ -79,19 +79,19 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 18 <= wasser["wassertemperatur"] <= 23:
 
-        punkte += 12
+        punkte += 11
         gruende.append("Optimale Wassertemperatur")
 
 
     elif wasser["wassertemperatur"] <= 26:
 
-        punkte += 8
+        punkte += 7
         gruende.append("Gute Wassertemperatur")
 
 
     else:
 
-        punkte -= 8
+        punkte -= 9
         gruende.append("Sehr warmes Wasser")
 
 
@@ -102,13 +102,13 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if wasser["sauerstoff"] >= 10:
 
-        punkte += 10
+        punkte += 8
         gruende.append("Sehr hoher Sauerstoff")
 
 
     elif wasser["sauerstoff"] >= 8:
 
-        punkte += 6
+        punkte += 5
         gruende.append("Guter Sauerstoff")
 
 
@@ -119,13 +119,13 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 8 <= wasser["truebung"] <= 18:
 
-        punkte += 10
+        punkte += 8
         gruende.append("Optimale Trübung")
 
 
     elif wasser["truebung"] <= 30:
 
-        punkte += 5
+        punkte += 4
 
 
 
@@ -135,13 +135,13 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 40 <= durchfluss["durchfluss"] <= 120:
 
-        punkte += 8
+        punkte += 6
         gruende.append("Leichte Strömung")
 
 
     elif durchfluss["durchfluss"] < 40:
 
-        punkte += 4
+        punkte += 3
         gruende.append("Sehr geringer Durchfluss")
 
 
@@ -152,24 +152,24 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if "Abend" in phase:
 
-        punkte += 15
+        punkte += 12
         gruende.append("Abendbeißzeit")
 
 
     elif "Morgen" in phase:
 
-        punkte += 12
+        punkte += 10
         gruende.append("Morgenbeißzeit")
 
 
     elif "Nacht" in phase:
 
-        punkte += 2
+        punkte += 1
 
 
     else:
 
-        punkte -= 12
+        punkte -= 8
 
 
 

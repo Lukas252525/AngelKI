@@ -33,19 +33,19 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 5 <= monat <= 9:
 
-        punkte += 3
+        punkte += 2
         gruende.append("Warme Jahreszeit begünstigt Wels")
 
 
     elif 3 <= monat <= 4:
 
-        punkte += 1
+        punkte += 0
         gruende.append("Frühjahr beginnt")
 
 
     else:
 
-        punkte -= 5
+        punkte -= 6
         gruende.append("Kalte Jahreszeit")
 
 
@@ -56,19 +56,19 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if wasser["wassertemperatur"] >= 24:
 
-        punkte += 7
+        punkte += 6
         gruende.append("Sehr gutes Welswasser")
 
 
     elif wasser["wassertemperatur"] >= 18:
 
-        punkte += 4
+        punkte += 3
         gruende.append("Gute Wassertemperatur")
 
 
     else:
 
-        punkte -= 4
+        punkte -= 5
         gruende.append("Kaltes Wasser")
 
 
@@ -79,7 +79,7 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if wasser["sauerstoff"] >= 8:
 
-        punkte += 5
+        punkte += 4
         gruende.append("Ausreichender Sauerstoff")
 
 
@@ -90,20 +90,20 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if 25 <= durchfluss["durchfluss"] <= 70:
 
-        punkte += 10
+        punkte += 8
         gruende.append("Ruhige Strömung")
 
 
     elif durchfluss["durchfluss"] < 25:
 
-        punkte += 5
+        punkte += 4
         gruende.append("Sehr ruhige Bedingungen")
 
 
 
     elif durchfluss["durchfluss"] > 100:
 
-        punkte += 5
+        punkte += 4
         gruende.append("Hoher Durchfluss aktiviert Fische")
 
 
@@ -114,25 +114,25 @@ def berechne(wetter, wasser, tageszeit, durchfluss):
 
     if "Nacht" in phase:
 
-        punkte += 14
+        punkte += 18
         gruende.append("Starke Nachtaktivität")
 
 
     elif "Abend" in phase:
 
-        punkte += 9
+        punkte += 8
         gruende.append("Abendaktivität")
 
 
     elif "Morgen" in phase:
 
-        punkte += 5
+        punkte += 3
         gruende.append("Morgenaktivität")
 
 
     else:
 
-        punkte -= 15
+        punkte -= 20
         gruende.append("Tageslicht reduziert Welsaktivität")
 
 
